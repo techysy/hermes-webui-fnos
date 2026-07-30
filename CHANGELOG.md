@@ -2,6 +2,28 @@
 
 ---
 
+## 2026-07-31
+
+### 修复 / Fixed
+- **HERMES_API_URL** — 修正为指向 Gateway API (:8642) 而非 Dashboard (:9119)
+- **install_init** — 改为 no-op（源码已打包在 app/ 目录）
+- **systemd 服务** — 使用 Type=forking + PIDFile 跟踪后台进程
+- **9个生命周期脚本** — 补齐所有必需脚本（fnOS 验证器要求）
+
+### 变更 / Changed
+- **移除 iframe 版本** — fnOS 桌面窗口与 WebUI API 存在 CORS 冲突
+- **移除 wizard/ 目录** — 可能导致验证问题，用 config_callback 替代
+- **移除 install_dep_apps** — fnOS 1.1.31xx+ 验证器不接受此字段
+- **使用 Hermes 官方 favicon** — 替换占位符图标
+- **源码打包方案** — 从 npm install 改为打包 hermes-webui 源码
+
+### 文档 / Docs
+- **TROUBLESHOOTING.md** — 新增问题排查与修复记录
+- **README** — 更新项目结构、安装说明、系统自启配置
+- **阶段性总结** — 记录 7/30-31 从零到可用的完整路径
+
+---
+
 ## 2026-07-30
 
 ### 新增 / Added

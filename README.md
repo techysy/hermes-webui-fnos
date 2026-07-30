@@ -65,20 +65,25 @@ fnpack build
 
 ```
 hermes-webui-fnos/
-├── manifest          # 应用元数据（依赖 nodejs_v24）
-├── app/ui/
-│   ├── config        # 入口配置（URL 类型，端口 8787）
-│   └── images/       # 桌面图标
+├── manifest          # 应用元数据
+├── app/
+│   ├── server/       # hermes-webui 源码（打包时拉取）
+│   └── ui/
+│       ├── config    # 入口配置（URL 类型，端口 8787）
+│       └── images/   # 桌面图标
 ├── cmd/
 │   ├── main          # 启动/停止/状态管理
-│   ├── install_init  # npm install hermes-web-ui
-│   └── config_callback  # 保存 Gateway 配置
+│   ├── install_init  # no-op（源码已打包）
+│   ├── install_callback  # no-op
+│   ├── config_init   # no-op
+│   ├── config_callback  # 保存 Gateway 配置
+│   ├── upgrade_init  # no-op
+│   ├── upgrade_callback  # no-op
+│   ├── uninstall_init    # 卸载清理
+│   └── uninstall_callback # 卸载清理
 ├── config/
 │   ├── privilege     # 应用权限
 │   └── resource      # 资源配置
-├── wizard/
-│   ├── install       # 安装向导
-│   └── config        # 设置向导
 ├── ICON.PNG          # 64x64 包图标
 └── ICON_256.PNG      # 256x256 包图标
 ```
@@ -167,9 +172,9 @@ Description=HermesWebUI App
 After=network.target
 
 [Service]
-Type=simple
+Type=forking
 ExecStart=/bin/bash /var/apps/HermesWebUI/cmd/main start
-ExecStop=/bin/bash /var/apps/HermesWebUI/cmd/main stop
+PIDFile=/var/apps/HermesWebUI/var/webui.pid
 Restart=on-failure
 RestartSec=5
 
@@ -198,7 +203,7 @@ systemctl --user status hermes-webui.service
 
 1. 确认 WebUI 服务已启动：`ss -tlnp | grep 8787`
 2. 检查启动日志：`cat /vol4/@appdata/HermesWebUI/webui.log`
-3. 如果使用 iframe 模式，尝试切换为 url 模式
+3. 手动重启：`cd /var/apps/HermesWebUI && bash cmd/main start`
 
 ### 安装失败
 
