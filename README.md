@@ -28,15 +28,15 @@
 3. 选择下载的 `.fpk` 文件
 4. 按照向导完成安装（配置 Agent 地址和 API Key）
 
-### 方式二：SSH 安装
+### ~~方式二：SSH 安装~~（已失效）
+
+> ⚠️ `appcenter-cli install-fpk` 在 fnOS 1.1.31xx 系列后已被官方移除，不再支持命令行安装 fpk。请使用方式一通过应用中心手动安装。
 
 ```bash
-# 上传到飞牛
-scp HermesWebUI.fpk yangyu@192.168.31.101:/tmp/
-
-# SSH 安装
-ssh yangyu@192.168.31.101
-sudo appcenter-cli install-fpk /tmp/HermesWebUI.fpk
+# ⚠️ 以下命令已失效（保留仅供参考）
+# scp HermesWebUI.fpk yangyu@192.168.31.101:/tmp/
+# ssh yangyu@192.168.31.101
+# sudo appcenter-cli install-fpk /tmp/HermesWebUI.fpk
 ```
 
 ## 快速开始
