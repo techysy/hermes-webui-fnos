@@ -33,11 +33,19 @@
 
 ---
 
-### v0.19.0 Dashboard 替代 WebUI
+### 原生 Dashboard 占用端口导致 WebUI 无法启动
 
-**现象**：v0.19.0 的 `hermes dashboard` 命令就是 WebUI，不再需要单独的 WebUI 应用
+**现象**：WebUI app 安装后显示 "Chat unavailable: 1"，实际打开的是原生 Dashboard 而非 WebUI
 
-**说明**：v0.19.0 内置 dashboard 提供 chat、sessions、files、models、logs、cron、skills 等功能。对于只需要基本功能的场景，直接用内置 dashboard 即可，不需要 hermes-webui-fnos 包。
+**根因**：历史 Hermes 实例的 `hermes-dashboard.service` 已占用 :8787 端口。WebUI app 安装后因端口冲突无法启动，用户访问 :8787 看到的是原生 Dashboard 界面。
+
+**修复**：停止并禁用原生 Dashboard service：
+```bash
+systemctl --user stop hermes-dashboard.service
+systemctl --user disable hermes-dashboard.service
+```
+
+**说明**：v0.19.0 的 `hermes dashboard` 是内置管理界面，功能完整。如果只需要基本功能，直接用内置 dashboard 即可，不需要 hermes-webui-fnos 包。但如果需要自定义 UI 或远程 Gateway 模式，WebUI 包更合适。
 
 ---
 
