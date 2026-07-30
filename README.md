@@ -23,7 +23,9 @@
 
 ### 方式一：应用中心安装（推荐）
 
-1. 从 [Releases](https://github.com/techysy/hermes-webui-fnos/releases) 下载最新的 `.fpk` 安装包
+1. 从 [Releases](https://github.com/techysy/hermes-webui-fnos/releases) 下载 `.fpk` 安装包
+   - `HermesWebUI.fpk` — 新标签页打开（推荐）
+   - `HermesWebUI-iframe.fpk` — fnOS 桌面内嵌窗口
 2. 打开飞牛 NAS → 应用中心 → 手动安装
 3. 选择下载的 `.fpk` 文件
 4. 按照向导完成安装（配置 Agent 地址和 API Key）
