@@ -1,0 +1,30 @@
+#!/bin/bash
+# uninstall_init — 卸载前清理
+# fnOS 在卸载前调用此脚本，清理运行时数据和日志
+set -euo pipefail
+
+APP_NAME="${TRIM_APPNAME:-HermesWebUI}"
+DATA_DIR="${TRIM_PKGVAR:-/vol4/@appdata/${APP_NAME}}"
+
+# 停止运行中的进程
+PID_FILE="${DATA_DIR}/webui.pid"
+if [ -f "${PID_FILE}" ]; then
+  PID=$(cat "${PID_FILE}")
+  kill "${PID}" 2>/dev/null || true
+  sleep 2
+  kill -9 "${PID}" 2>/dev/null || true
+  rm -f "${PID_FILE}"
+fi
+
+# 清理 npm 缓存
+if [ -d "${DATA_DIR}/node_modules" ]; then
+  rm -rf "${DATA_DIR}/node_modules"
+fi
+
+# 清理日志
+rm -f "${DATA_DIR}"/*.log
+
+# 清理临时文件
+rm -f /tmp/hermes-pty-active-*.json 2>/dev/null || true
+
+exit 0
