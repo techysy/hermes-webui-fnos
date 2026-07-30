@@ -1,0 +1,13 @@
+appname               = HermesWebUI
+version               = 1.0.0
+display_name          = Hermes WebUI
+desc                  = Hermes Agent Web Interface — chat, sessions, files, models
+arch                  = x86_64
+source                = thirdparty
+maintainer            = techysy
+distributor           = techysy
+desktop_uidir         = ui
+desktop_applaunchname = HermesWebUI.Application
+install_dep_apps      = nodejs_v24
+service_port          = 8787
+ctl_stop              = true

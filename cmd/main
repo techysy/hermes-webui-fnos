@@ -1,0 +1,75 @@
+#!/bin/bash
+set -euo pipefail
+
+APP_NAME="${TRIM_APPNAME:-HermesWebUI}"
+APP_DIR="${TRIM_APPDEST:-/var/apps/${APP_NAME}}"
+DATA_DIR="${TRIM_PKGVAR:-${APP_DIR}/var}"
+WEBUI_PORT=8787
+NODE_BIN="/vol4/@appcenter/nodejs_v24/bin"
+WEBUI_LOG="${DATA_DIR}/webui.log"
+WEBUI_PID="${DATA_DIR}/webui.pid"
+
+# Read config from gateway.env
+CONFIG_FILE="${DATA_DIR}/gateway.env"
+[ -f "${CONFIG_FILE}" ] && source "${CONFIG_FILE}"
+REMOTE_GATEWAY="${GATEWAY_URL:-http://192.168.31.31:8642}"
+REMOTE_DASHBOARD="${DASHBOARD_URL:-http://192.168.31.31:9119}"
+REMOTE_KEY="${GATEWAY_KEY:-webui-gateway-key-2026}"
+
+mkdir -p "${DATA_DIR}"
+
+log() { echo "[$(date '+%Y-%m-%d %H:%M:%S')] $*" >> "${WEBUI_LOG}"; }
+
+start_webui() {
+  [ -f "${WEBUI_PID}" ] && kill -0 "$(cat "${WEBUI_PID}")" 2>/dev/null && return 0
+
+  # Find hermes-web-ui binary
+  WEBUI_BIN="${DATA_DIR}/node_modules/.bin/hermes-web-ui"
+  if [ ! -f "${WEBUI_BIN}" ]; then
+    log "ERROR: hermes-web-ui not found, run install first"
+    return 1
+  fi
+
+  # Unset proxy for local network communication
+  unset http_proxy https_proxy HTTP_PROXY HTTPS_PROXY no_proxy 2>/dev/null || true
+
+  export HERMES_WEBUI_CHAT_BACKEND=gateway
+  export HERMES_WEBUI_GATEWAY_BASE_URL="${REMOTE_GATEWAY}"
+  export HERMES_WEBUI_GATEWAY_API_KEY="${REMOTE_KEY}"
+  export HERMES_API_URL="${REMOTE_DASHBOARD}"
+  export HERMES_WEBUI_HOST="0.0.0.0"
+  export HERMES_WEBUI_PORT="${WEBUI_PORT}"
+
+  cd "${DATA_DIR}"
+  PATH="${NODE_BIN}:${DATA_DIR}/node_modules/.bin:${PATH}" \
+    nohup node "${WEBUI_BIN}" >> "${WEBUI_LOG}" 2>&1 &
+  echo $! > "${WEBUI_PID}"
+
+  for i in $(seq 1 30); do
+    curl -sf "http://127.0.0.1:${WEBUI_PORT}/health" >/dev/null 2>&1 && log "WebUI started (PID $(cat ${WEBUI_PID}))" && return 0
+    sleep 1
+  done
+  log "WebUI start timeout"
+}
+
+stop() {
+  [ -f "${WEBUI_PID}" ] || return 0
+  PID=$(cat "${WEBUI_PID}")
+  kill "${PID}" 2>/dev/null || true
+  for i in 1 2 3; do kill -0 "${PID}" 2>/dev/null || { rm -f "${WEBUI_PID}"; log "Stopped"; return 0; }; sleep 1; done
+  kill -9 "${PID}" 2>/dev/null || true
+  rm -f "${WEBUI_PID}"
+  log "Force stopped"
+}
+
+status() {
+  [ -f "${WEBUI_PID}" ] && kill -0 "$(cat "${WEBUI_PID}")" 2>/dev/null && echo "running" || echo "stopped"
+}
+
+case "${1:-start}" in
+  start) start_webui ;;
+  stop) stop ;;
+  status) status ;;
+  restart) stop; sleep 2; start_webui ;;
+  *) echo "Usage: $0 {start|stop|status|restart}"; exit 1 ;;
+esac

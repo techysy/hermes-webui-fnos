@@ -1,0 +1,13 @@
+#!/bin/bash
+APP_NAME="${TRIM_APPNAME:-HermesWebUI}"
+DATA_DIR="${TRIM_PKGVAR:-/vol4/@appdata/${APP_NAME}}"
+mkdir -p "${DATA_DIR}"
+
+# Save wizard values to gateway.env
+cat > "${DATA_DIR}/gateway.env" <<-EOF
+GATEWAY_URL="${gateway_url:-http://192.168.31.31:8642}"
+DASHBOARD_URL="${dashboard_url:-http://192.168.31.31:9119}"
+GATEWAY_KEY="${gateway_key:-webui-gateway-key-2026}"
+EOF
+
+exit 0

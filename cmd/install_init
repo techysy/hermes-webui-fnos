@@ -1,0 +1,13 @@
+#!/bin/bash
+set -euo pipefail
+
+APP_NAME="${TRIM_APPNAME:-HermesWebUI}"
+DATA_DIR="${TRIM_PKGVAR:-/vol4/@appdata/${APP_NAME}}"
+NODE_BIN="/vol4/@appcenter/nodejs_v24/bin"
+
+mkdir -p "${DATA_DIR}"
+
+# Install hermes-web-ui via npm
+PATH="${NODE_BIN}:${PATH}" npm install --prefix "${DATA_DIR}" hermes-web-ui >> "${DATA_DIR}/install.log" 2>&1
+
+exit 0
