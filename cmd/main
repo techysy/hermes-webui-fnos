@@ -1,48 +1,58 @@
 #!/bin/bash
 set -euo pipefail
-
 APP_NAME="${TRIM_APPNAME:-HermesWebUI}"
 APP_DIR="${TRIM_APPDEST:-/var/apps/${APP_NAME}}"
 DATA_DIR="${TRIM_PKGVAR:-${APP_DIR}/var}"
 WEBUI_PORT=8787
-NODE_BIN="/vol4/@appcenter/nodejs_v24/bin"
+WEBUI_SRC="${APP_DIR}/target/server"
 WEBUI_LOG="${DATA_DIR}/webui.log"
 WEBUI_PID="${DATA_DIR}/webui.pid"
+WEBUI_VENV="${DATA_DIR}/venv"
+WEBUI_STATE="${DATA_DIR}/state"
+HERMES_HOME="${DATA_DIR}/hermes_home"
 
-# Read config from gateway.env
 CONFIG_FILE="${DATA_DIR}/gateway.env"
 [ -f "${CONFIG_FILE}" ] && source "${CONFIG_FILE}"
 REMOTE_GATEWAY="${GATEWAY_URL:-http://192.168.31.31:8642}"
 REMOTE_DASHBOARD="${DASHBOARD_URL:-http://192.168.31.31:9119}"
 REMOTE_KEY="${GATEWAY_KEY:-webui-gateway-key-2026}"
+USE_PROXY_FLAG="${USE_PROXY:-true}"
+PROXY_URL="${PROXY_URL:-http://192.168.31.31:7890}"
 
-mkdir -p "${DATA_DIR}"
+mkdir -p "${DATA_DIR}" "${WEBUI_STATE}" "${HERMES_HOME}"
+[ ! -f "${WEBUI_STATE}/settings.json" ] && echo '{"theme":"light","skin":"codex","language":"zh"}' > "${WEBUI_STATE}/settings.json"
 
 log() { echo "[$(date '+%Y-%m-%d %H:%M:%S')] $*" >> "${WEBUI_LOG}"; }
 
+ensure_venv() {
+  [ -f "${WEBUI_VENV}/bin/python" ] && return 0
+  /usr/bin/python3 -m venv "${WEBUI_VENV}"
+  "${WEBUI_VENV}/bin/pip" install pyyaml cryptography >> "${WEBUI_LOG}" 2>&1
+}
+
 start_webui() {
   [ -f "${WEBUI_PID}" ] && kill -0 "$(cat "${WEBUI_PID}")" 2>/dev/null && return 0
+  ensure_venv
+  [ ! -f "${WEBUI_SRC}/server.py" ] && log "ERROR: source missing" && return 1
 
-  # Find hermes-web-ui binary
-  WEBUI_BIN="${DATA_DIR}/node_modules/.bin/hermes-web-ui"
-  if [ ! -f "${WEBUI_BIN}" ]; then
-    log "ERROR: hermes-web-ui not found, run install first"
-    return 1
-  fi
+  # 不设代理环境变量 — 局域网 Gateway 不需要走代理
+  unset http_proxy https_proxy HTTP_PROXY HTTPS_PROXY no_proxy
 
-  # Unset proxy for local network communication
-  unset http_proxy https_proxy HTTP_PROXY HTTPS_PROXY no_proxy 2>/dev/null || true
-
+  export HERMES_HOME="${HERMES_HOME}"
+  export HERMES_API_URL="${REMOTE_DASHBOARD}"
   export HERMES_WEBUI_CHAT_BACKEND=gateway
   export HERMES_WEBUI_GATEWAY_BASE_URL="${REMOTE_GATEWAY}"
   export HERMES_WEBUI_GATEWAY_API_KEY="${REMOTE_KEY}"
-  export HERMES_API_URL="${REMOTE_DASHBOARD}"
   export HERMES_WEBUI_HOST="0.0.0.0"
   export HERMES_WEBUI_PORT="${WEBUI_PORT}"
+  export HERMES_WEBUI_STATE_DIR="${WEBUI_STATE}"
+  export HERMES_WEBUI_SKIP_ONBOARDING=1
+  export HERMES_WEBUI_DISABLE_AGENT_CHECK=1
+  export HOST="0.0.0.0"
+  export PORT="${WEBUI_PORT}"
 
-  cd "${DATA_DIR}"
-  PATH="${NODE_BIN}:${DATA_DIR}/node_modules/.bin:${PATH}" \
-    nohup node "${WEBUI_BIN}" >> "${WEBUI_LOG}" 2>&1 &
+  cd "${WEBUI_SRC}"
+  nohup "${WEBUI_VENV}/bin/python" server.py >> "${WEBUI_LOG}" 2>&1 &
   echo $! > "${WEBUI_PID}"
 
   for i in $(seq 1 30); do
