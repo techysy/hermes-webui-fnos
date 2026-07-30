@@ -8,6 +8,5 @@ maintainer            = techysy
 distributor           = techysy
 desktop_uidir         = ui
 desktop_applaunchname = HermesWebUI.Application
-install_dep_apps      = nodejs_v24
 service_port          = 8787
 ctl_stop              = true
