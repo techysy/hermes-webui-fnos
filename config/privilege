@@ -1,1 +1,6 @@
-{"defaults": {"run-as": "package"}}
+{
+    "defaults":
+    {
+        "run-as": "package"
+    }
+}

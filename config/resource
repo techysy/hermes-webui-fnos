@@ -1,10 +1,24 @@
 {
-    "data-share": {
-        "shares": [
+    "data-share":
+    {
+        "shares":
+        [
             {
                 "name": "HermesWebUI",
-                "permission": {
-                    "rw": [
+                "permission":
+                {
+                    "rw":
+                    [
+                        "HermesWebUI"
+                    ]
+                }
+            },
+            {
+                "name": "HermesWebUI/data",
+                "permission":
+                {
+                    "rw":
+                    [
                         "HermesWebUI"
                     ]
                 }
