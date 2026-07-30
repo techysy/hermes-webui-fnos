@@ -90,7 +90,7 @@ hermes-webui-fnos/
 
 ## 架构说明
 
-### 模式 A：Remote Gateway（轻量推荐）
+### 模式 A：Remote Gateway（轻量推荐）✅ 已验证
 
 飞牛上不装 Hermes Agent，纯 WebUI 前端连接远程 Gateway。
 
