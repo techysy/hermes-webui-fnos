@@ -246,6 +246,21 @@ fnpack build
 
 ---
 
+### iframe 嵌入 CORS 跨域错误
+
+**现象**：使用 `type: "iframe"` 打开 WebUI 时，第一次能用，后续发消息报错：
+```
+Error: Cross-origin mismatch - check reverse proxy headers
+```
+
+**根因**：fnOS 桌面窗口（端口 5666）通过 iframe 嵌入 WebUI（端口 8787），浏览器检测到 origin 不同，拦截跨域请求。
+
+**结论**：fnOS 的 iframe 嵌入与 WebUI 的 API 请求存在 CORS 冲突，**无法修复**（需要改上游 server.py 添加 CORS 头）。
+
+**解决方案**：使用 `type: "url"` 在新标签页打开，不存在跨域问题。
+
+---
+
 ## 通用排查流程
 
 1. **检查端口**：`ss -tlnp | grep <port>`
