@@ -11,4 +11,5 @@
 - cmd/main — 启动/停止/状态管理 / Start/stop/status management
 - wizard/install + wizard/config — Gateway 连接配置 / Gateway connection config
 - **uninstall_init + uninstall_callback** — 卸载清理脚本 / Uninstall cleanup scripts
+- **应用设置页面** — 支持通过 fnOS 应用设置修改 Gateway 配置 / App settings page for Gateway config
 - README.md — 项目说明 / Project documentation
