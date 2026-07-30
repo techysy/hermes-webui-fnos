@@ -25,10 +25,18 @@
 
 1. 从 [Releases](https://github.com/techysy/hermes-webui-fnos/releases) 下载 `HermesWebUI.fpk`
 2. 打开飞牛 NAS → 应用中心 → 手动安装
-3. 选择下载的 `.fpk` 文件
+3. 选择下载的 `HermesWebUI.fpk` 文件
 4. 按照向导完成安装（配置 Agent 地址和 API Key）
+5. **首次安装后手动启动**（fnOS 不会自动启动）：
+```bash
+# SSH 到飞牛执行
+cd /var/apps/HermesWebUI && bash cmd/main start
 
-### ~~方式二：SSH 安装~~（已失效）
+# 验证
+curl -sf http://127.0.0.1:8787/health
+```
+
+### 方式二：~~SSH 安装~~（已失效）
 
 > ⚠️ `appcenter-cli install-fpk` 在 fnOS 1.1.31xx 系列后已被官方移除，不再支持命令行安装 fpk。请使用方式一通过应用中心手动安装。
 
