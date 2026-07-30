@@ -261,6 +261,49 @@ Error: Cross-origin mismatch - check reverse proxy headers
 
 ---
 
+### 重装后进程未重启
+
+**现象**：重装 fpk 后，旧 server.py 进程仍在运行（用老配置），或进程已死但新进程未启动
+
+**根因**：fnOS 重装不会自动杀掉旧进程。旧进程可能：
+1. 还在运行但用老环境变量（HERMES_API_URL 指向 :9119）
+2. 已被杀掉但新进程未启动
+
+**修复**：手动重启
+```bash
+kill -9 $(pgrep -f 'server.py')
+cd /var/apps/HermesWebUI && bash cmd/main start
+```
+
+---
+
+### 图标不更新
+
+**现象**：重装后桌面图标仍是旧的紫色纯色图标
+
+**根因**：fnOS 缓存了旧图标数据，简单重装不会刷新
+
+**修复**：
+1. 完全卸载应用
+2. 清除图标缓存（如有）
+3. 重新安装
+
+---
+
+### app.tgz 内容不完整
+
+**现象**：安装成功但 server.py 不存在，启动失败
+
+**根因**：打包时 `app/server/` 目录为空（git clone 失败或被中断），fnpack 仍然能打包空目录
+
+**修复**：重新打包前验证 `app/server/` 有完整文件
+```bash
+ls app/server/server.py  # 必须存在
+du -sh app/server/        # 应该 > 10MB
+```
+
+---
+
 ## 通用排查流程
 
 1. **检查端口**：`ss -tlnp | grep <port>`
