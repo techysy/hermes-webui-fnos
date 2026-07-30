@@ -4,6 +4,79 @@
 
 ---
 
+## 2026-07-30
+
+### Dashboard "Chat unavailable: 1"
+
+**现象**：飞牛上访问 Dashboard (:8787) 能打开界面，但聊天报 "Chat unavailable: 1"
+
+**根因**：API server 绑定在 `127.0.0.1:18642`，浏览器从局域网访问不到
+
+**修复**：修改 `config.yaml` 中 `api_server.host` 为 `0.0.0.0`，然后重启 gateway
+
+**陷阱**：gateway 配置修改后必须重启才生效，但 gateway 进程树保护会阻止从内部重启。必须从**另一台机器** SSH 执行 `hermes gateway restart`。
+
+---
+
+### Gateway 进程树保护阻止重启
+
+**现象**：任何从 gateway 进程树内执行的 `systemctl --user restart`、`kill`、`pkill` 都被拦截
+
+**根因**：Hermes Gateway 拦截 SIGTERM 信号传播，防止自身被意外重启
+
+**解决方案**（按优先级）：
+1. 从**另一台 LAN 机器** SSH 执行重启命令
+2. 在飞牛桌面终端手动执行
+3. 重启 VM
+
+**确认**：`delegate_task` 和 `cronjob` 也无法绕过此限制 (#30719)
+
+---
+
+### v0.19.0 Dashboard 替代 WebUI
+
+**现象**：v0.19.0 的 `hermes dashboard` 命令就是 WebUI，不再需要单独的 WebUI 应用
+
+**说明**：v0.19.0 内置 dashboard 提供 chat、sessions、files、models、logs、cron、skills 等功能。对于只需要基本功能的场景，直接用内置 dashboard 即可，不需要 hermes-webui-fnos 包。
+
+---
+
+### 旧 fnOS 应用残留清理
+
+**现象**：卸载旧应用后，数据目录、配置目录、日志仍有残留
+
+**清理位置**：
+```
+/vol4/@appdata/    — HermesAgentCN, HermesWebUI, HermesWebUICN
+/vol4/@appconf/    — HermesAgentCN, HermesStudio, HermesWebUI, HermesWebUICN, trim.hermes
+/var/log/apps/     — 各应用 .log 文件（需要 sudo）
+/tmp/              — hermes-pty-active-*.json, hermes-webui-fnos
+```
+
+**注意**：`/var/log/apps/` 下的文件需要 sudo 删除
+
+---
+
+### 新建独立仓库（非 Fork）
+
+**决策**：hermes-webui-fnos 从 nesquena/hermes-webui 的 fork 改为独立仓库
+
+**原因**：
+- Fork 会混入上游提交，维护成本高
+- fnOS 包只需要打包文件（manifest、cmd/、config/、wizard/）
+- 源码通过 npm install 或打包在 app/ 目录获取
+- 独立仓库更清晰，易维护
+
+---
+
+### appcenter-cli install-fpk 已移除
+
+**现象**：fnOS 1.1.31xx+ 不再支持 `appcenter-cli install-fpk` 命令
+
+**替代方案**：使用 Web UI 手动安装（应用中心 → 手动安装）
+
+---
+
 ## 2026-07-31
 
 ### 安装失败："应用包不符合系统版本要求"
