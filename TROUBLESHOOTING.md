@@ -4,6 +4,67 @@
 
 ---
 
+## 阶段性总结（2026-07-30 ~ 07-31）
+
+### 从零到可用的完整路径
+
+**Day 1（7/30）：环境搭建**
+- 飞牛上安装 Hermes Agent（pip + venv）
+- 配置 Gateway API server（.env + config.yaml）
+- 启动 Dashboard（:8787）和 Gateway（:18642）
+- 遇到：API server 绑定 127.0.0.1 导致局域网不可达
+- 遇到：Gateway 进程树保护阻止重启
+- 清理旧 fnOS 应用残留
+- 创建独立仓库 hermes-webui-fnos（非 fork）
+
+**Day 2（7/31）：fnOS 打包**
+- 理解 fnpack 打包流程：manifest + app/ + cmd/ + config/
+- 发现关键坑：9个生命周期脚本必须全部存在
+- 发现关键坑：install_dep_apps 字段导致验证失败
+- 发现关键坑：config/privilege JSON 格式必须匹配模板
+- 发现关键坑：config/resource shares 不能为空
+- 从 npm install 方案改为打包源码方案（更稳定）
+- 修正 HERMES_API_URL 指向 Gateway API 而非 Dashboard
+- 配置 systemd user service 实现开机自启
+- iframe 版本因 CORS 问题放弃，只保留新标签页版
+
+### 关键决策
+
+| 决策 | 原因 |
+|------|------|
+| 独立仓库非 Fork | fnOS 包只需打包文件，源码打包在 app/ 里 |
+| 打包源码非 npm install | install_init 阶段 TRIM_PKGVAR 不存在，npm 失败 |
+| 去掉 install_dep_apps | fnOS 1.1.31xx+ 验证器不接受此字段 |
+| 去掉 wizard/ | 可能导致验证问题，用 config_callback 替代 |
+| 新标签页非 iframe | fnOS 桌面窗口与 WebUI API 存在 CORS 冲突 |
+| HERMES_API_URL 指向 Gateway | Dashboard 未运行时健康检查失败导致聊天报错 |
+
+### 最终架构
+
+```
+飞牛 fnOS
+├── HermesWebUI fnOS App (:8787)  ← 新标签页打开
+│   └── server.py (hermes-webui)
+│       └── HERMES_WEBUI_CHAT_BACKEND=gateway
+│           └── 远程 Gateway API (:8642)
+│
+Arch VM (192.168.31.31)
+├── Hermes Gateway (:18642)  ← API server
+│   └── Xiaomi mimo-v2.5
+└── Hermes Dashboard (:8787)  ← 停用
+```
+
+### 已验证可用
+
+- ✅ 安装 fpk → 应用中心手动安装
+- ✅ 启动服务 → `bash cmd/main start`
+- ✅ 聊天功能 → 连接远程 Gateway
+- ✅ 应用设置 → 保存 Gateway 配置
+- ✅ systemd 自启 → 重启飞牛后自动拉起
+- ✅ 卸载清理 → uninstall_init + uninstall_callback
+
+---
+
 ## 2026-07-30
 
 ### Dashboard "Chat unavailable: 1"
