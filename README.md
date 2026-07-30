@@ -133,6 +133,53 @@ fnpack create HermesWebUI
 fnpack build
 ```
 
+## 手动重启
+
+如果 WebUI 无法访问，手动重启：
+
+```bash
+# 停止
+kill -9 $(pgrep -f 'server.py') 2>/dev/null
+
+# 启动
+cd /var/apps/HermesWebUI && bash cmd/main start
+
+# 检查状态
+ss -tlnp | grep 8787
+curl -sf http://127.0.0.1:8787/health
+```
+
+## 系统自启（可选）
+
+WebUI 默认通过 fnOS 应用生命周期管理。如需 systemd 自启：
+
+```bash
+# 创建 service 文件
+cat > ~/.config/systemd/user/hermes-webui.service << 'EOF'
+[Unit]
+Description=HermesWebUI App
+After=network.target
+
+[Service]
+Type=simple
+ExecStart=/bin/bash /var/apps/HermesWebUI/cmd/main start
+ExecStop=/bin/bash /var/apps/HermesWebUI/cmd/main stop
+Restart=on-failure
+RestartSec=5
+
+[Install]
+WantedBy=default.target
+EOF
+
+# 启用
+systemctl --user daemon-reload
+systemctl --user enable hermes-webui.service
+systemctl --user start hermes-webui.service
+
+# 检查
+systemctl --user status hermes-webui.service
+```
+
 ## 常见问题
 
 ### 无法连接到 Agent
