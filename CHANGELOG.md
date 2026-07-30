@@ -10,4 +10,5 @@
 - install_init — npm install hermes-web-ui / 自动安装 WebUI
 - cmd/main — 启动/停止/状态管理 / Start/stop/status management
 - wizard/install + wizard/config — Gateway 连接配置 / Gateway connection config
+- **uninstall_init + uninstall_callback** — 卸载清理脚本 / Uninstall cleanup scripts
 - README.md — 项目说明 / Project documentation
