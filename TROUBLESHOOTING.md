@@ -316,9 +316,17 @@ Error: Cross-origin mismatch - check reverse proxy headers
 
 **根因**：fnOS 桌面窗口（端口 5666）通过 iframe 嵌入 WebUI（端口 8787），浏览器检测到 origin 不同，拦截跨域请求。
 
-**结论**：fnOS 的 iframe 嵌入与 WebUI 的 API 请求存在 CORS 冲突，**无法修复**（需要改上游 server.py 添加 CORS 头）。
+**与 Gateway 位置无关**：无论是 Bundled Agent（本机 :8642）还是 Remote Gateway（远程 :8642），iframe CORS 问题都存在。问题根源是 fnOS iframe 嵌入方式（5666 vs 8787），不是 Gateway 在哪里。
 
-**解决方案**：使用 `type: "url"` 在新标签页打开，不存在跨域问题。
+| 模式 | Gateway 位置 | iframe CORS 问题 |
+|---|---|---|
+| Bundled Agent | 本机 :8642 | ✅ 有（5666 vs 8787） |
+| Remote Gateway | 远程 :8642 | ✅ 有（5666 vs 8787） |
+
+**解决方案**：
+1. **`type: "url"` 新标签页**（推荐）— 完整浏览器环境，无 iframe 限制
+2. **fnOS 统一网关** — 通过 fnOS 域名访问 WebUI，origin 相同，无跨域（需 fnOS ≥1.2.0401）
+3. **上游修复** — 改 server.py 添加 CORS 头（需上游 [nesquena/hermes-webui](https://github.com/nesquena/hermes-webui) 接受 PR）
 
 ---
 
