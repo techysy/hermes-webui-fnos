@@ -120,14 +120,6 @@ fnOS
 
 ## 开发指南
 
-### 使用 Agent 辅助开发（推荐）
-
-安装 [yangyu-skills-hub](https://github.com/techysy/yangyu-skills-hub) 中的 fnOS 应用开发 skill，让 Hermes Agent 协助你开发、打包和调试：
-
-```bash
-hermes skills install fnos-app-development --repo techysy/yangyu-skills-hub
-```
-
 ### 开发流程
 
 ```bash
@@ -218,7 +210,6 @@ systemctl --user status hermes-webui.service
 | [Hermes WebUI](https://github.com/nesquena/hermes-webui) | 上游 WebUI 项目 |
 | [Hermes Agent](https://github.com/NousResearch/hermes-agent) | Hermes Agent 官方项目 |
 | [fnOS 开发文档](https://developer.fnnas.com) | 飞牛应用开发文档 |
-| [fnOS App Development Skill](https://github.com/techysy/yangyu-skills-hub) | Agent 辅助开发指南 |
 
 ## License
 
