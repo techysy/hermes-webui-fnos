@@ -2,7 +2,7 @@
 
 [![License](https://img.shields.io/badge/license-MIT-blue.svg)](LICENSE)
 [![fnOS](https://img.shields.io/badge/fnOS-1.0+-green.svg)](https://www.fnnas.com)
-[![Hermes WebUI](https://img.shields.io/badge/Hermes%20WebUI-npm-purple.svg)](https://github.com/nesquena/hermes-webui)
+[![Hermes WebUI v1.3.0](https://img.shields.io/badge/Hermes%20WebUI-v1.3.0-purple.svg)](https://github.com/nesquena/hermes-webui)
 [![Build](https://img.shields.io/badge/build-fnpack-%23007bff.svg)](https://developer.fnnas.com/docs/cli/fnpack/)
 
 [Hermes WebUI](https://github.com/nesquena/hermes-webui) 的飞牛 NAS（fnOS）应用打包，提供完整的 Hermes Agent 网页管理界面。
@@ -211,10 +211,6 @@ systemctl --user status hermes-webui.service
 | [Hermes Agent](https://github.com/NousResearch/hermes-agent) | Hermes Agent 官方项目 |
 | [fnOS 开发文档](https://developer.fnnas.com) | 飞牛应用开发文档 |
 
-## License
-
-MIT
-
 ## 🔮 Future / 迭代计划
 
 等待上游 [nesquena/hermes-webui](https://github.com/nesquena/hermes-webui) 发布新版本后重新打包：
@@ -224,3 +220,7 @@ MIT
 - 新增聊天后端适配
 
 > 📖 上游项目：[nesquena/hermes-webui](https://github.com/nesquena/hermes-webui) · [NousResearch/hermes-agent](https://github.com/NousResearch/hermes-agent)
+
+## License
+
+MIT
