@@ -209,6 +209,8 @@ systemctl --user status hermes-webui.service
 |------|------|
 | [Hermes WebUI](https://github.com/nesquena/hermes-webui) | 上游 WebUI 项目 |
 | [Hermes Agent](https://github.com/NousResearch/hermes-agent) | Hermes Agent 官方项目 |
+| [9Router](https://github.com/techysy/9router-fnos) | Hermes 相关 fnOS 应用 — FREE AI 路由器 / API 代理 |
+| [MetaCubeXD](https://github.com/techysy/metacubexd-fnos) | Hermes 相关 fnOS 应用 — Mihomo 网络代理面板 |
 | [fnOS 开发文档](https://developer.fnnas.com) | 飞牛应用开发文档 |
 
 ## 🔮 Future / 迭代计划
