@@ -4,6 +4,25 @@
 
 ---
 
+## 2026-08-03：白屏 — build 目录残留 iframe 版入口配置
+
+**现象**：应用中心装完 HermesWebUI 后，点图标白屏（fnOS 桌面窗口 iframe 嵌入，跨域加载失败）。
+
+**根因**：重新打包时只 `scp` 同步了 `cmd/`、`wizard/`、`manifest` 等文件，**漏了 `app/ui/config`**。build 目录里的 `app/ui/config` 还是旧的 `"type": "iframe"` 版本，被打包进 fpk。fnOS 桌面窗口（5666）iframe 嵌入 WebUI（8787）→ 跨域 → 白屏。
+
+**修复**：把 `app/ui/config` 同步为 `"type": "url"`，重新打包。
+
+**教训**：
+1. **改入口配置时务必确认 build 目录同步了 `app/ui/config`**（`scp` 清单不能漏）
+2. build 前检查 build 目录的 `app/ui/config` 的 `type` 是 `url` 还是 `iframe`
+3. 打包后用 `tar xzf HermesWebUI.fpk` + `tar xzf app.tgz` 验证入口类型
+
+**入口配置对照**：
+- `type: "url"` — 新标签页打开（推荐，无 iframe 跨域问题）
+- `type: "iframe"` — fnOS 桌面窗口内嵌（有跨域问题，WebUI 不适用）
+
+---
+
 ## 阶段性总结（2026-07-30 ~ 07-31）
 
 ### 从零到可用的完整路径
