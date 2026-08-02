@@ -2,6 +2,14 @@
 
 ---
 
+## 0.53.1 (2026-08-03)
+
+### 修复 / Fixed
+- **入口改为 url 新标签页** — v0.53.0 build 时 build 目录残留 iframe 版 `app/ui/config`，导致 fnOS 桌面窗口 iframe 嵌入 WebUI 跨域白屏
+- 改用 `type: "url"` 新标签页打开（避免 iframe 跨域问题）
+
+---
+
 ## 0.53.0 (2026-08-03)
 
 ### 变更 / Changed
