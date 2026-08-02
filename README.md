@@ -90,9 +90,24 @@ hermes-webui-fnos/
 
 ## 架构说明
 
-### 模式 A：Remote Gateway（轻量推荐）✅ 已验证
+### 默认模式：连接本机 Hermes Core 内核（自闭环）✅ 已验证
 
-飞牛上不装 Hermes Agent，纯 WebUI 前端连接远程 Gateway。
+WebUI 前端默认连接**本机**的 [Hermes Core](https://github.com/techysy/hermes-core-fnos) 内核（`http://127.0.0.1:8642`），
+飞牛上同时运行 Hermes Core（本地内核/Gateway）和 Hermes WebUI（前端界面），完全自闭环，不依赖远程服务器。
+
+```
+fnOS (单机自闭环)
+┌─────────────────────────────────────────┐
+│ Hermes WebUI  :8787   ← 前端界面        │
+│   └─ 连 127.0.0.1:8642                  │
+│ Hermes Core   :8642   ← 本地内核/Gateway│
+│   └─ 连本机 9Router :20128 / LLM        │
+└─────────────────────────────────────────┘
+```
+
+### 模式 A：Remote Gateway（可选）
+
+飞牛上不装内核，WebUI 前端连接远程 Gateway（在应用设置页修改 Gateway 地址即可）。
 
 ```
 fnOS                    远程服务器
@@ -102,21 +117,7 @@ fnOS                    远程服务器
 └──────────────┘       └──────────────┘
 ```
 
-设置 `HERMES_WEBUI_CHAT_BACKEND=gateway` 和远程 Gateway 地址。
-
-### 模式 B：Bundled Agent（自闭环）
-
-飞牛上安装 Hermes Agent 内核，本地启动 Dashboard + Gateway。
-
-```
-fnOS
-┌────────────────────────┐
-│ Hermes WebUI  :8787    │
-│ Hermes Agent  :9119    │
-│   └─ Dashboard         │
-│   └─ Gateway           │
-└────────────────────────┘
-```
+安装时向导可配置 Gateway 地址，默认 `http://127.0.0.1:8642`（本机内核）。
 
 ## 开发指南
 

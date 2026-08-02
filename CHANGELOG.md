@@ -2,6 +2,15 @@
 
 ---
 
+## 0.53.0 (2026-08-03)
+
+### 变更 / Changed
+- **默认连接本机 Hermes Core 内核** — Gateway 地址默认改为 `http://127.0.0.1:8642`，与 hermes-core-fnos 配套自闭环
+- **移除对远程 31.31 的硬编码依赖** — cmd/main、config_callback、wizard 全部指向本机
+- README 架构说明更新为"本地自闭环"默认模式
+
+---
+
 ## 2026-07-31
 
 ### 修复 / Fixed

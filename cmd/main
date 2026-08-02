@@ -13,11 +13,12 @@ HERMES_HOME="${DATA_DIR}/hermes_home"
 
 CONFIG_FILE="${DATA_DIR}/gateway.env"
 [ -f "${CONFIG_FILE}" ] && source "${CONFIG_FILE}"
-REMOTE_GATEWAY="${GATEWAY_URL:-http://192.168.31.31:8642}"
-REMOTE_DASHBOARD="${DASHBOARD_URL:-http://192.168.31.31:9119}"
+REMOTE_GATEWAY="${GATEWAY_URL:-http://127.0.0.1:8642}"
+REMOTE_DASHBOARD="${DASHBOARD_URL:-http://127.0.0.1:8642}"
 REMOTE_KEY="${GATEWAY_KEY:-webui-gateway-key-2026}"
 USE_PROXY_FLAG="${USE_PROXY:-true}"
-PROXY_URL="${PROXY_URL:-http://192.168.31.31:7890}"
+# WebUI 只连本机 Gateway，不需要代理
+PROXY_URL="${PROXY_URL:-}"
 
 mkdir -p "${DATA_DIR}" "${WEBUI_STATE}" "${HERMES_HOME}"
 [ ! -f "${WEBUI_STATE}/settings.json" ] && echo '{"theme":"light","skin":"codex","language":"zh"}' > "${WEBUI_STATE}/settings.json"

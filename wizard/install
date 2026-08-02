@@ -6,14 +6,14 @@
         "type": "text",
         "field": "gateway_url",
         "label": "Gateway 地址",
-        "initValue": "http://192.168.31.31:8642",
+        "initValue": "http://127.0.0.1:8642",
         "rules": [{"required": true, "message": "必填"}]
       },
       {
         "type": "text",
         "field": "dashboard_url",
         "label": "Dashboard 地址",
-        "initValue": "http://192.168.31.31:9119"
+        "initValue": "http://127.0.0.1:8642"
       },
       {
         "type": "text",
