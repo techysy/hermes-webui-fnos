@@ -2,6 +2,14 @@
 
 ---
 
+## 0.52.108 (2026-08-03)
+
+### 修复 / Fixed
+- **status() 返回码修复** — stopped 时返回非零(1)，否则 fnOS 误判为 running，从不调用 start 导致应用中心无法启动 WebUI
+- 参考 strava 面板同款坑：`status() stopped 须 return 1`
+
+---
+
 ## 0.52.107 (2026-08-03)
 
 ### 修复 / 诊断 / Fixed & Diagnostics

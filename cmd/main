@@ -107,7 +107,13 @@ stop() {
 }
 
 status() {
-  [ -f "${WEBUI_PID}" ] && kill -0 "$(cat "${WEBUI_PID}")" 2>/dev/null && echo "running" || echo "stopped"
+  if [ -f "${WEBUI_PID}" ] && kill -0 "$(cat "${WEBUI_PID}" 2>/dev/null)" 2>/dev/null; then
+    echo "running"
+    return 0
+  fi
+  # stopped — 必须返回非零, 否则 fnOS 误判为 running, 从不调用 start
+  echo "stopped"
+  return 1
 }
 
 case "${1:-start}" in
