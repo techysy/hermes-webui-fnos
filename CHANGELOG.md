@@ -2,6 +2,24 @@
 
 ---
 
+## 0.52.108-iframe (2026-08-03)
+
+### 变更 / Changed
+- **iframe 窗口版** — 通过补丁 `patches/enable_iframe.py` 移除 server 的 iframe 限制，使 fnOS 桌面窗口可内嵌 WebUI
+  - 根因：WebUI server 硬编码 `X-Frame-Options: DENY` + CSP `frame-ancestors 'none'`，浏览器阻止 iframe 嵌入（之前白屏/不能用，不是跨域，是这两个安全头）
+  - 补丁：`X-Frame-Options: DENY → SAMEORIGIN` + `frame-ancestors 'none' → *`
+  - url 版保留安全头（DENY），iframe 版移除
+
+### 打包方法
+```bash
+# iframe 版 (打包前打补丁)
+python3 patches/enable_iframe.py app/server/api/helpers.py
+# 改 app/ui/config type=iframe → fnpack build
+# 打包后恢复 url 版 helpers.py
+```
+
+---
+
 ## 0.52.108 (2026-08-03)
 
 ### 修复 / Fixed

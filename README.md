@@ -25,14 +25,13 @@
 
 ### 版本 / Version
 
-仅提供 **url 新标签页版**（不再发布 iframe 窗口版）：
-
 | 版本 | 入口 | 说明 |
 |------|------|------|
-| `HermesWebUI-0.52.106-url.fpk` | url 新标签页 | 在浏览器新标签页打开 WebUI |
+| `HermesWebUI-0.52.108-url.fpk` | url 新标签页 | 在浏览器新标签页打开 WebUI（保留安全头）|
+| `HermesWebUI-0.52.108-iframe.fpk` | iframe 窗口版 | 在 fnOS 桌面窗口内嵌（打补丁移除安全头）|
 
 > 图标已对齐 Hermes Agent 设计语言（白色背景 + 黑色 logo）。
-> **决策**：iframe 窗口版经实测存在跨域/白屏问题，后续不再发布窗口版，仅用 url 版。
+> **iframe 窗口版说明**：WebUI server 硬编码 `X-Frame-Options: DENY` + CSP `frame-ancestors 'none'`，浏览器会阻止 iframe 嵌入（之前白屏/不能用，不是跨域，是这两个安全头）。iframe 版通过 `patches/enable_iframe.py` 移除限制。**url 版保留安全头，更安全**。
 
 ### 方式一：应用中心安装（推荐）
 
