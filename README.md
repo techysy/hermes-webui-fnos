@@ -21,6 +21,29 @@
 - ⏰ **定时任务** - 查看和管理定时调度
 - 🎯 **健康监控** - Gateway/Runtime 状态面板
 
+## ⚠️ 已知限制：移动端（fnOS iOS App WebView）
+
+> **重要**：WebUI 完整功能（发消息、新建会话）仅在**桌面端**可用。**移动端（fnOS iOS App 的 WebView）只能查看历史会话，无法发消息/新建会话**。
+
+### 原因
+移动端 fnOS iOS App 的 **WebView 容器**发送 POST 请求时存在 bug：把请求体（JSON body）**错误地拼接到了 HTTP method 字段**，变成 `{"workspace":...,"profile":...}POST` 这种非法方法，后端返回 **501 Unsupported method**。
+
+### 具体表现
+| 操作 | 桌面端 | 移动端 (fnOS iOS WebView) |
+|------|--------|--------------------------|
+| 查看历史会话 | ✅ | ✅（localStorage 本地存储，不依赖后端）|
+| 发消息 | ✅ | ❌ 501 (method 污染) |
+| 新建会话 | ✅ | ❌ 501 (method 污染) |
+
+### 说明
+- 历史会话存在前端 **localStorage**（`boot.js`），移动端能看到不依赖后端
+- 发消息/新建会话需要 **POST** 请求，移动端 WebView 的 method 污染导致后端 501
+- 这是**移动端容器（iOS WebView）的硬限制**，无法通过 WebUI 配置绕过
+
+### 移动端正常工作建议
+- 用**桌面端**（fnOS 桌面窗口 / 浏览器访问 `http://<NAS>:8787`）进行完整对话
+- 移动端仅用于**查看**历史会话
+
 ## 安装方式
 
 ### 版本 / Version

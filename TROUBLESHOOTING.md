@@ -4,6 +4,25 @@
 
 ---
 
+## 2026-08-03：移动端 (fnOS iOS WebView) 无法发消息/新建会话 — method 污染 (501)
+
+**现象**：移动端 fnOS iOS App WebView 能查看历史会话，但发消息/新建会话报 501。
+
+**根因**：移动端 iOS WebView 发送 POST 请求时，把请求体 JSON **错误拼接进 HTTP method 字段**（变成 `{"workspace":...}POST`），后端无法识别 → 501 Unsupported method。
+
+**webui.log 证据**：
+```
+method: '{"workspace":"...","profile":"default","model":"openai/gpt-5.4-mini"}POST', path: /api/session/new, status: 501
+```
+
+**两层问题**：
+1. **403 CSRF**（旧版）：已修复——`HERMES_WEBUI_ALLOWED_ORIGINS=https://hermeswebui.techysy.fnos.net` + `TRUST_FORWARDED_HOST=true`
+2. **501 method 污染**：**移动端 iOS WebView 硬限制**，后端无法配置绕过
+
+**结论**：移动端仅可查看历史会话（localStorage），完整对话用桌面端。已在 README 强调。
+
+---
+
 ## 2026-08-03：应用中心启动失败 — server 路径缺少 target 层兼容
 
 **现象**：应用中心启动 HermesWebUI 失败，日志显示 stopped，无进程。
