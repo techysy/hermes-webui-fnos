@@ -1,5 +1,5 @@
 appname               = HermesWebUI
-version               = 0.53.1
+version               = 0.54.0
 display_name          = Hermes WebUI
 desc                  = Hermes Agent Web Interface — chat, sessions, files, models
 arch                  = x86_64
