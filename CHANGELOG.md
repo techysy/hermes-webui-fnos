@@ -2,6 +2,13 @@
 
 ---
 
+## 0.52.109 (2026-08-03)
+
+### 修复 / Fixed
+- **移动端/外部域名 CSRF 跨域** — cmd/main 加 `HERMES_WEBUI_TRUST_FORWARDED_HOST=true`，信任反向代理的 X-Forwarded-Host，解决移动端通过 `hermeswebui.techysy.fnos.net` 访问时 Origin≠Host 导致的 `Cross-origin mismatch`（发消息 501/跨域拒绝）
+
+---
+
 ## 0.52.108-iframe (2026-08-03)
 
 ### 变更 / Changed

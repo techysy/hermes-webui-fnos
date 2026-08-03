@@ -71,6 +71,9 @@ start_webui() {
   export HERMES_WEBUI_STATE_DIR="${WEBUI_STATE}"
   export HERMES_WEBUI_SKIP_ONBOARDING=1
   export HERMES_WEBUI_DISABLE_AGENT_CHECK=1
+  # 信任反向代理的 X-Forwarded-Host — 解决移动端/外部域名访问的 CSRF Origin 跨域
+  # (反向代理转发 hermeswebui.techysy.fnos.net 时 Origin 与 Host 不同, 需信任代理头)
+  export HERMES_WEBUI_TRUST_FORWARDED_HOST=true
   export HOST="0.0.0.0"
   export PORT="${WEBUI_PORT}"
 
