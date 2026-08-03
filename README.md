@@ -1,8 +1,10 @@
 # Hermes WebUI for fnOS
 
+[![Release](https://img.shields.io/github/v/release/techysy/hermes-webui-fnos?label=Release&color=blue)](https://github.com/techysy/hermes-webui-fnos/releases)
+[![Downloads](https://img.shields.io/github/downloads/techysy/hermes-webui-fnos/total?label=Downloads&color=green)](https://github.com/techysy/hermes-webui-fnos/releases)
 [![License](https://img.shields.io/badge/license-MIT-blue.svg)](LICENSE)
 [![fnOS](https://img.shields.io/badge/fnOS-1.0+-green.svg)](https://www.fnnas.com)
-[![Hermes WebUI v1.3.0](https://img.shields.io/badge/Hermes%20WebUI-v1.3.0-purple.svg)](https://github.com/nesquena/hermes-webui)
+[![Upstream v0.52.106](https://img.shields.io/badge/Upstream-v0.52.106-purple.svg)](https://github.com/nesquena/hermes-webui)
 [![Build](https://img.shields.io/badge/build-fnpack-%23007bff.svg)](https://developer.fnnas.com/docs/cli/fnpack/)
 
 [Hermes WebUI](https://github.com/nesquena/hermes-webui) 的飞牛 NAS（fnOS）应用打包，提供完整的 Hermes Agent 网页管理界面。
