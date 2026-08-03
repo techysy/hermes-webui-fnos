@@ -27,8 +27,8 @@
 
 | 变体 | 入口 | 说明 |
 |------|------|------|
-| `HermesWebUI-0.54.0-url.fpk` | url 新标签页 | 在浏览器新标签页打开 WebUI |
-| `HermesWebUI-0.54.0-iframe.fpk` | iframe 窗口版 | 在 fnOS 桌面窗口内嵌打开 |
+| `HermesWebUI-0.52.106-url.fpk` | url 新标签页 | 在浏览器新标签页打开 WebUI |
+| `HermesWebUI-0.52.106-iframe.fpk` | iframe 窗口版 | 在 fnOS 桌面窗口内嵌打开 |
 
 > 图标已对齐 Hermes Agent 设计语言（白色背景 + 黑色 logo）。若 iframe 窗口版遇到白屏/跨域，改用 url 版。
 
