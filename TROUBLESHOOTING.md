@@ -4,6 +4,29 @@
 
 ---
 
+## 2026-08-03：应用中心启动失败 — server 路径缺少 target 层兼容
+
+**现象**：应用中心启动 HermesWebUI 失败，日志显示 stopped，无进程。
+
+**根因**：fnOS 解压 `app.tgz` 到 `${TRIM_APPDEST}/server`（**没有 target 层**），但 cmd/main 只用 `WEBUI_SRC="${APP_DIR}/target/server"` → server.py 找不到 → `start_webui` 返回 1。
+
+参考 metacubexd 的正确做法（双重路径检测）。
+
+**修复**：cmd/main 改为兼容双路径：
+```bash
+if [ -d "${APP_DIR}/server" ]; then
+    WEBUI_SRC="${APP_DIR}/server"
+elif [ -d "${APP_DIR}/target/server" ]; then
+    WEBUI_SRC="${APP_DIR}/target/server"
+else
+    WEBUI_SRC="${APP_DIR}/target/server"
+fi
+```
+
+**教训**：fnOS 解压 app.tgz 到 APP_DIR 根（无 target 层）。凡是用 `${APP_DIR}/target/...` 找资源的 cmd/main，都必须兼容 `${APP_DIR}/...` 双路径。
+
+---
+
 ## 2026-08-03：白屏 — build 目录残留 iframe 版入口配置
 
 **现象**：应用中心装完 HermesWebUI 后，点图标白屏（fnOS 桌面窗口 iframe 嵌入，跨域加载失败）。
