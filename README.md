@@ -23,20 +23,20 @@
 
 ## 安装方式
 
-### 版本变体 / Variants
+### 版本 / Version
 
-提供两个入口变体，按需选用：
+仅提供 **url 新标签页版**（不再发布 iframe 窗口版）：
 
-| 变体 | 入口 | 说明 |
+| 版本 | 入口 | 说明 |
 |------|------|------|
 | `HermesWebUI-0.52.106-url.fpk` | url 新标签页 | 在浏览器新标签页打开 WebUI |
-| `HermesWebUI-0.52.106-iframe.fpk` | iframe 窗口版 | 在 fnOS 桌面窗口内嵌打开 |
 
-> 图标已对齐 Hermes Agent 设计语言（白色背景 + 黑色 logo）。若 iframe 窗口版遇到白屏/跨域，改用 url 版。
+> 图标已对齐 Hermes Agent 设计语言（白色背景 + 黑色 logo）。
+> **决策**：iframe 窗口版经实测存在跨域/白屏问题，后续不再发布窗口版，仅用 url 版。
 
 ### 方式一：应用中心安装（推荐）
 
-1. 从 [Releases](https://github.com/techysy/hermes-webui-fnos/releases) 下载 `HermesWebUI.fpk`（选 url 或 iframe 变体）
+1. 从 [Releases](https://github.com/techysy/hermes-webui-fnos/releases) 下载 `HermesWebUI.fpk`（url 版）
 2. 打开飞牛 NAS → 应用中心 → 手动安装
 3. 选择下载的 `HermesWebUI.fpk` 文件
 4. 按照向导完成安装（配置 Agent 地址和 API Key）
