@@ -4,7 +4,14 @@ APP_NAME="${TRIM_APPNAME:-HermesWebUI}"
 APP_DIR="${TRIM_APPDEST:-/var/apps/${APP_NAME}}"
 DATA_DIR="${TRIM_PKGVAR:-${APP_DIR}/var}"
 WEBUI_PORT=8787
-WEBUI_SRC="${APP_DIR}/target/server"
+# 兼容 fnOS 两种解压位置: 实际在 ${APP_DIR}/server, 部分版本在 ${APP_DIR}/target/server
+if [ -d "${APP_DIR}/server" ]; then
+    WEBUI_SRC="${APP_DIR}/server"
+elif [ -d "${APP_DIR}/target/server" ]; then
+    WEBUI_SRC="${APP_DIR}/target/server"
+else
+    WEBUI_SRC="${APP_DIR}/target/server"
+fi
 WEBUI_LOG="${DATA_DIR}/webui.log"
 WEBUI_PID="${DATA_DIR}/webui.pid"
 WEBUI_VENV="${DATA_DIR}/venv"
