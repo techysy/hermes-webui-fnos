@@ -2,6 +2,13 @@
 
 ---
 
+## 0.52.107 (2026-08-03)
+
+### 修复 / 诊断 / Fixed & Diagnostics
+- **启动诊断日志** — cmd/main 记录每次调用的环境变量（TRIM_APPDEST/TRIM_PKGVAR 等）+ 启动失败详情（venv 失败/超时/进程状态/webui.log 尾部）到 `webui-diag.log`，便于排查应用中心启动失败
+
+---
+
 ## 决策记录 (2026-08-03)
 
 ### 只发布 url 版，不再发布 iframe 窗口版

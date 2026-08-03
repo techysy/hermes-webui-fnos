@@ -3,6 +3,19 @@ set -euo pipefail
 APP_NAME="${TRIM_APPNAME:-HermesWebUI}"
 APP_DIR="${TRIM_APPDEST:-/var/apps/${APP_NAME}}"
 DATA_DIR="${TRIM_PKGVAR:-${APP_DIR}/var}"
+
+# 诊断日志 — 记录每次调用环境变量, 便于排查应用中心启动失败
+DIAG="${DATA_DIR}/webui-diag.log"
+mkdir -p "${DATA_DIR}" 2>/dev/null
+{
+    echo "=== $(date '+%F %T') call: '${1:-<none>}' USER=$(id -un) UID=$(id -u) PWD=$(pwd) ==="
+    echo "  TRIM_APPDEST=${TRIM_APPDEST:-<unset>}"
+    echo "  TRIM_PKGVAR=${TRIM_PKGVAR:-<unset>}"
+    echo "  TRIM_APPNAME=${TRIM_APPNAME:-<unset>}"
+    echo "  TRIM_SERVICE_PORT=${TRIM_SERVICE_PORT:-<unset>}"
+    echo "  PATH=${PATH:-<unset>}"
+} >> "${DIAG}" 2>&1
+
 WEBUI_PORT=8787
 # 兼容 fnOS 两种解压位置: 实际在 ${APP_DIR}/server, 部分版本在 ${APP_DIR}/target/server
 if [ -d "${APP_DIR}/server" ]; then
@@ -34,14 +47,16 @@ log() { echo "[$(date '+%Y-%m-%d %H:%M:%S')] $*" >> "${WEBUI_LOG}"; }
 
 ensure_venv() {
   [ -f "${WEBUI_VENV}/bin/python" ] && return 0
-  /usr/bin/python3 -m venv "${WEBUI_VENV}"
-  "${WEBUI_VENV}/bin/pip" install pyyaml cryptography >> "${WEBUI_LOG}" 2>&1
+  echo "  [ensure_venv] creating venv at ${WEBUI_VENV}" >> "${DIAG}" 2>&1
+  /usr/bin/python3 -m venv "${WEBUI_VENV}" >> "${DIAG}" 2>&1 || { echo "  [ensure_venv] venv create FAILED rc=$?" >> "${DIAG}"; return 1; }
+  "${WEBUI_VENV}/bin/pip" install pyyaml cryptography >> "${WEBUI_LOG}" 2>&1 || echo "  [ensure_venv] pip install warn" >> "${DIAG}"
 }
 
 start_webui() {
-  [ -f "${WEBUI_PID}" ] && kill -0 "$(cat "${WEBUI_PID}")" 2>/dev/null && return 0
-  ensure_venv
-  [ ! -f "${WEBUI_SRC}/server.py" ] && log "ERROR: source missing" && return 1
+  [ -f "${WEBUI_PID}" ] && kill -0 "$(cat "${WEBUI_PID}" 2>/dev/null)" 2>/dev/null && return 0
+  echo "  [start] WEBUI_SRC=${WEBUI_SRC:-<unset>} WEBUI_VENV=${WEBUI_VENV:-<unset>}" >> "${DIAG}" 2>&1
+  ensure_venv || { echo "  [start] ensure_venv failed" >> "${DIAG}"; log "ERROR: venv failed"; return 1; }
+  [ ! -f "${WEBUI_SRC}/server.py" ] && { echo "  [start] server.py missing at ${WEBUI_SRC}" >> "${DIAG}"; log "ERROR: source missing"; return 1; }
 
   # 不设代理环境变量 — 局域网 Gateway 不需要走代理
   unset http_proxy https_proxy HTTP_PROXY HTTPS_PROXY no_proxy
@@ -62,11 +77,22 @@ start_webui() {
   cd "${WEBUI_SRC}"
   nohup "${WEBUI_VENV}/bin/python" server.py >> "${WEBUI_LOG}" 2>&1 &
   echo $! > "${WEBUI_PID}"
+  echo "  [start] launched server.py pid=$(cat "${WEBUI_PID}" 2>/dev/null)" >> "${DIAG}" 2>&1
 
   for i in $(seq 1 30); do
     curl -sf "http://127.0.0.1:${WEBUI_PORT}/health" >/dev/null 2>&1 && log "WebUI started (PID $(cat ${WEBUI_PID}))" && return 0
     sleep 1
   done
+  # 启动超时 — 记录诊断信息
+  echo "  [start] TIMEOUT after 30s" >> "${DIAG}" 2>&1
+  PIDX=$(cat "${WEBUI_PID}" 2>/dev/null)
+  if kill -0 "${PIDX}" 2>/dev/null; then
+      echo "  [start] process alive pid=${PIDX}, but health not responding" >> "${DIAG}"
+  else
+      echo "  [start] process DEAD pid=${PIDX}" >> "${DIAG}"
+  fi
+  echo "  [start] webui.log tail:" >> "${DIAG}" 2>&1
+  tail -5 "${WEBUI_LOG}" 2>/dev/null >> "${DIAG}" 2>&1
   log "WebUI start timeout"
 }
 
