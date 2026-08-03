@@ -2,6 +2,18 @@
 
 ---
 
+## 1.0.0 (2026-08-03)
+
+### 变更 / Changed
+- **版本号改为 techysy 独立版本号 `1.0.0`** — 不再同步上游 hermes-webui 的 0.52.x
+- 首个正式发布版，包含全部修复：
+  - 移动端/外部域名 CSRF 跨域修复（TRUST_FORWARDED_HOST）
+  - iframe 窗口版补丁（X-Frame-Options SAMEORIGIN + frame-ancestors *）
+  - status() stopped 返回非零（应用中心能启动）
+  - server 路径 target 层兼容
+
+---
+
 ## 0.52.109 (2026-08-03)
 
 ### 修复 / Fixed
