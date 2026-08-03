@@ -74,6 +74,9 @@ start_webui() {
   # 信任反向代理的 X-Forwarded-Host — 解决移动端/外部域名访问的 CSRF Origin 跨域
   # (反向代理转发 hermeswebui.techysy.fnos.net 时 Origin 与 Host 不同, 需信任代理头)
   export HERMES_WEBUI_TRUST_FORWARDED_HOST=true
+  # 显式允许外部域名 Origin (移动端 fnOS App WebView 访问), 不依赖 X-Forwarded-Host
+  # 逗号分隔, 需带 scheme; 匹配移动端外部访问域名
+  export HERMES_WEBUI_ALLOWED_ORIGINS="https://hermeswebui.techysy.fnos.net"
   export HOST="0.0.0.0"
   export PORT="${WEBUI_PORT}"
 

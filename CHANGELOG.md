@@ -2,6 +2,13 @@
 
 ---
 
+## 1.0.1 (2026-08-03)
+
+### 修复 / Fixed
+- **移动端 CSRF 跨域（进一步修复）** — 加 `HERMES_WEBUI_ALLOWED_ORIGINS="https://hermeswebui.techysy.fnos.net"`，显式允许移动端外部域名 Origin。之前只设 TRUST_FORWARDED_HOST，但 fnOS 网关可能不传 X-Forwarded-Host，导致移动端 POST 发消息仍 Cross-origin mismatch
+
+---
+
 ## 1.0.0 (2026-08-03)
 
 ### 变更 / Changed
