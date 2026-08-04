@@ -1,69 +1,59 @@
 # Hermes WebUI for fnOS
 
+Hermes Agent 网页管理界面的飞牛 NAS (fnOS) 应用包。
+
 [![Release](https://img.shields.io/github/v/release/techysy/hermes-webui-fnos?label=Release&color=blue)](https://github.com/techysy/hermes-webui-fnos/releases)
 [![Downloads](https://img.shields.io/github/downloads/techysy/hermes-webui-fnos/total?label=Downloads&color=green)](https://github.com/techysy/hermes-webui-fnos/releases)
 [![License](https://img.shields.io/badge/license-MIT-blue.svg)](LICENSE)
 [![fnOS](https://img.shields.io/badge/fnOS-1.0+-green.svg)](https://www.fnnas.com)
 [![Upstream v0.52.106](https://img.shields.io/badge/Upstream-v0.52.106-purple.svg)](https://github.com/nesquena/hermes-webui)
-[![Build](https://img.shields.io/badge/build-fnpack-%23007bff.svg)](https://developer.fnnas.com/docs/cli/fnpack/)
 
-[Hermes WebUI](https://github.com/nesquena/hermes-webui) 的飞牛 NAS（fnOS）应用打包，提供完整的 Hermes Agent 网页管理界面。
+> 基于 [Hermes WebUI](https://github.com/nesquena/hermes-webui) 开源项目，为飞牛 fnOS 提供一键部署方案。
 
-> 本项目基于 [Hermes WebUI](https://github.com/nesquena/hermes-webui) 开源项目，为飞牛 fnOS 提供一键部署方案。
+- [English README](./README.en.md)
 
-## 功能特性
+---
 
-- 💬 **对话系统** - 支持多轮对话和流式输出
-- 🛠️ **技能管理** - 内置和自定义技能管理
-- 🧠 **记忆管理** - Agent 长期记忆查看和管理
-- 🔌 **多模型支持** - 支持接入各种模型服务商
-- 📱 **Web 访问** - 浏览器直接打开，无需安装客户端
-- ⏰ **定时任务** - 查看和管理定时调度
-- 🎯 **健康监控** - Gateway/Runtime 状态面板
+## ✨ 功能亮点
 
-## ⚠️ 已知限制：移动端（fnOS iOS App WebView）
+- 💬 **对话系统** — 多轮对话 + 流式输出
+- 🛠️ **技能管理** — 内置和自定义技能
+- 🧠 **记忆管理** — Agent 长期记忆查看
+- 🔌 **多模型支持** — 接入各种模型服务商
+- 📱 **Web 访问** — 浏览器直接打开，无需客户端
+- ⏰ **定时任务** — 查看和管理调度
+- 🎯 **健康监控** — Gateway/Runtime 状态面板
 
-> **重要**：WebUI 完整功能（发消息、新建会话）仅在**桌面端**可用。**移动端（fnOS iOS App 的 WebView）只能查看历史会话，无法发消息/新建会话**。
+## ⚠️ 移动端限制（fnOS iOS App）
 
-### 原因
-移动端 fnOS iOS App 的 **WebView 容器**发送 POST 请求时存在 bug：把请求体（JSON body）**错误地拼接到了 HTTP method 字段**，变成 `{"workspace":...,"profile":...}POST` 这种非法方法，后端返回 **501 Unsupported method**。
+**重要**：WebUI 完整功能（发消息、新建会话）仅在**桌面端**可用。**移动端（fnOS iOS App 的 WebView）只能查看历史会话**。
 
-### 具体表现
 | 操作 | 桌面端 | 移动端 (fnOS iOS WebView) |
 |------|--------|--------------------------|
-| 查看历史会话 | ✅ | ✅（localStorage 本地存储，不依赖后端）|
+| 查看历史会话 | ✅ | ✅ |
 | 发消息 | ✅ | ❌ 501 (method 污染) |
 | 新建会话 | ✅ | ❌ 501 (method 污染) |
 
-### 说明
-- 历史会话存在前端 **localStorage**（`boot.js`），移动端能看到不依赖后端
-- 发消息/新建会话需要 **POST** 请求，移动端 WebView 的 method 污染导致后端 501
-- 这是**移动端容器（iOS WebView）的硬限制**，无法通过 WebUI 配置绕过
+> 原因：移动端 WebView 发送 POST 时把请求体拼进 HTTP method 字段（iOS WebView 硬限制）。历史会话存前端 localStorage，不依赖后端。
 
-### 移动端正常工作建议
-- 用**桌面端**（fnOS 桌面窗口 / 浏览器访问 `http://<NAS>:8787`）进行完整对话
-- 移动端仅用于**查看**历史会话
+**建议**：完整对话用桌面端（fnOS 桌面窗口 / 浏览器访问 `http://<NAS>:8787`），移动端仅查看历史。
 
-## 安装方式
+## 🚀 快速安装
 
-### 版本 / Version
+### 选择版本
 
 | 版本 | 入口 | 说明 |
 |------|------|------|
-| `HermesWebUI-1.0.0-url.fpk` | url 新标签页 | 在浏览器新标签页打开 WebUI（保留安全头）|
-| `HermesWebUI-1.0.0-iframe.fpk` | iframe 窗口版 | 在 fnOS 桌面窗口内嵌（打补丁移除安全头）|
+| `HermesWebUI-1.0.0-url.fpk` | url 新标签页 | 浏览器新标签页打开（保留安全头）|
+| `HermesWebUI-1.0.0-iframe.fpk` | iframe 窗口版 | fnOS 桌面窗口内嵌（打补丁移除安全头）|
 
-> **版本号**：采用 techysy 自己的独立版本号（`1.0.0`），不再同步上游 hermes-webui 的 0.52.x。
-> **图标**：已对齐 Hermes Agent 设计语言（白色背景 + 黑色 logo）。
-> **iframe 窗口版说明**：WebUI server 硬编码 `X-Frame-Options: DENY` + CSP `frame-ancestors 'none'`，浏览器会阻止 iframe 嵌入（之前白屏/不能用，不是跨域，是这两个安全头）。iframe 版通过 `patches/enable_iframe.py` 移除限制。**url 版保留安全头，更安全**。
+### 安装步骤
 
-### 方式一：应用中心安装（推荐）
+1. 从 [Releases](https://github.com/techysy/hermes-webui-fnos/releases) 下载 `HermesWebUI.fpk`（推荐 url 版）
+2. 飞牛 NAS → **应用中心 → 手动安装** → 选择 fpk
+3. 按向导配置 Agent 地址和 API Key
+4. **首次安装后手动启动**（fnOS 不会自动启动）：
 
-1. 从 [Releases](https://github.com/techysy/hermes-webui-fnos/releases) 下载 `HermesWebUI.fpk`（url 版）
-2. 打开飞牛 NAS → 应用中心 → 手动安装
-3. 选择下载的 `HermesWebUI.fpk` 文件
-4. 按照向导完成安装（配置 Agent 地址和 API Key）
-5. **首次安装后手动启动**（fnOS 不会自动启动）：
 ```bash
 # SSH 到飞牛执行
 cd /var/apps/HermesWebUI && bash cmd/main start
@@ -72,64 +62,19 @@ cd /var/apps/HermesWebUI && bash cmd/main start
 curl -sf http://127.0.0.1:8787/health
 ```
 
-### 方式二：~~SSH 安装~~（已失效）
+> ⚠️ **SSH 安装已失效**：`appcenter-cli install-fpk` 在 fnOS 1.1.31xx 后已被官方移除，请用应用中心手动安装。
 
-> ⚠️ `appcenter-cli install-fpk` 在 fnOS 1.1.31xx 系列后已被官方移除，不再支持命令行安装 fpk。请使用方式一通过应用中心手动安装。
+## 📖 使用说明
 
-```bash
-# ⚠️ 以下命令已失效（保留仅供参考）
-# scp HermesWebUI.fpk yangyu@192.168.31.101:/tmp/
-# ssh yangyu@192.168.31.101
-# sudo appcenter-cli install-fpk /tmp/HermesWebUI.fpk
-```
+1. 飞牛 NAS 桌面点击「Hermes WebUI」图标
+2. 浏览器打开 WebUI 界面
+3. 配置好 Gateway 后即可对话
 
-## 快速开始
+## 🏗️ 架构
 
-1. 在飞牛 NAS 桌面点击「Hermes WebUI」图标
-2. 浏览器打开 Hermes WebUI 界面
-3. 如果配置了远程 Gateway，可以直接对话
+### 默认模式：连接本机 Hermes Core（自闭环）✅ 已验证
 
-## 打包
-
-```bash
-# 在飞牛上
-fnpack build
-# 生成 HermesWebUI.fpk
-```
-
-## 项目结构
-
-```
-hermes-webui-fnos/
-├── manifest          # 应用元数据
-├── app/
-│   ├── server/       # hermes-webui 源码（打包时拉取）
-│   └── ui/
-│       ├── config    # 入口配置（URL 类型，端口 8787）
-│       └── images/   # 桌面图标
-├── cmd/
-│   ├── main          # 启动/停止/状态管理
-│   ├── install_init  # no-op（源码已打包）
-│   ├── install_callback  # no-op
-│   ├── config_init   # no-op
-│   ├── config_callback  # 保存 Gateway 配置
-│   ├── upgrade_init  # no-op
-│   ├── upgrade_callback  # no-op
-│   ├── uninstall_init    # 卸载清理
-│   └── uninstall_callback # 卸载清理
-├── config/
-│   ├── privilege     # 应用权限
-│   └── resource      # 资源配置
-├── ICON.PNG          # 64x64 包图标
-└── ICON_256.PNG      # 256x256 包图标
-```
-
-## 架构说明
-
-### 默认模式：连接本机 Hermes Core 内核（自闭环）✅ 已验证
-
-WebUI 前端默认连接**本机**的 [Hermes Core](https://github.com/techysy/hermes-core-fnos) 内核（`http://127.0.0.1:8642`），
-飞牛上同时运行 Hermes Core（本地内核/Gateway）和 Hermes WebUI（前端界面），完全自闭环，不依赖远程服务器。
+WebUI 默认连接**本机**的 [Hermes Core](https://github.com/techysy/hermes-core-fnos) 内核（`http://127.0.0.1:8642`），飞牛上同时运行内核 + 前端，完全自闭环。
 
 ```
 fnOS (单机自闭环)
@@ -143,7 +88,7 @@ fnOS (单机自闭环)
 
 ### 模式 A：Remote Gateway（可选）
 
-飞牛上不装内核，WebUI 前端连接远程 Gateway（在应用设置页修改 Gateway 地址即可）。
+飞牛上不装内核，WebUI 连接远程 Gateway（在应用设置页修改地址即可）。
 
 ```
 fnOS                    远程服务器
@@ -153,113 +98,33 @@ fnOS                    远程服务器
 └──────────────┘       └──────────────┘
 ```
 
-安装时向导可配置 Gateway 地址，默认 `http://127.0.0.1:8642`（本机内核）。
+## 🐛 问题排查
 
-## 开发指南
+安装/运行/连接的问题与历史修复记录，见 [TROUBLESHOOTING.md](./TROUBLESHOOTING.md)。
 
-### 开发流程
-
-```bash
-# 1. 基于 fnpack 模版创建
-fnpack create HermesWebUI
-
-# 2. 替换关键文件
-# - manifest：应用元数据
-# - cmd/main：生命周期脚本
-# - app/ui/config：入口配置
-# - wizard/：安装向导
-
-# 3. 构建
-fnpack build
-```
-
-## 手动重启
-
-如果 WebUI 无法访问，手动重启：
+## 🛠️ 从源码构建
 
 ```bash
-# 停止
-kill -9 $(pgrep -f 'server.py') 2>/dev/null
-
-# 启动
-cd /var/apps/HermesWebUI && bash cmd/main start
-
-# 检查状态
-ss -tlnp | grep 8787
-curl -sf http://127.0.0.1:8787/health
+# 在飞牛上
+fnpack build   # 生成 HermesWebUI.fpk
 ```
 
-## 系统自启（可选）
-
-WebUI 默认通过 fnOS 应用生命周期管理。如需 systemd 自启：
-
-```bash
-# 创建 service 文件
-cat > ~/.config/systemd/user/hermes-webui.service << 'EOF'
-[Unit]
-Description=HermesWebUI App
-After=network.target
-
-[Service]
-Type=forking
-ExecStart=/bin/bash /var/apps/HermesWebUI/cmd/main start
-PIDFile=/var/apps/HermesWebUI/var/webui.pid
-Restart=on-failure
-RestartSec=5
-
-[Install]
-WantedBy=default.target
-EOF
-
-# 启用
-systemctl --user daemon-reload
-systemctl --user enable hermes-webui.service
-systemctl --user start hermes-webui.service
-
-# 检查
-systemctl --user status hermes-webui.service
-```
-
-## 常见问题
-
-### 无法连接到 Agent
-
-1. 确认 Hermes Agent 实例正在运行
-2. 检查 Agent 地址和端口是否正确
-3. 如果用远程 Gateway，确认 API Key 配置正确
-
-### 应用拒绝连接
-
-1. 确认 WebUI 服务已启动：`ss -tlnp | grep 8787`
-2. 检查启动日志：`cat /vol4/@appdata/HermesWebUI/webui.log`
-3. 手动重启：`cd /var/apps/HermesWebUI && bash cmd/main start`
-
-### 安装失败
-
-1. 确认 fnOS 版本满足要求
-2. 检查 `/var/log/apps/` 下的应用日志
-3. 查看 `appcenter-cli list` 确认应用状态
-
-## 相关项目
+## 📚 相关项目
 
 | 项目 | 说明 |
 |------|------|
 | [Hermes WebUI](https://github.com/nesquena/hermes-webui) | 上游 WebUI 项目 |
 | [Hermes Agent](https://github.com/NousResearch/hermes-agent) | Hermes Agent 官方项目 |
-| [9Router](https://github.com/techysy/9router-fnos) | Hermes 相关 fnOS 应用 — FREE AI 路由器 / API 代理 |
-| [MetaCubeXD](https://github.com/techysy/metacubexd-fnos) | Hermes 相关 fnOS 应用 — Mihomo 网络代理面板 |
-| [Strava Panel](https://github.com/techysy/strava-panel-fnos) | Hermes 相关 fnOS 应用 — Strava 骑行数据面板 |
-| [fnOS 开发文档](https://developer.fnnas.com) | 飞牛应用开发文档 |
+| [Hermes Core](https://github.com/techysy/hermes-core-fnos) | 本地内核 fnOS 应用 |
+| [9Router](https://github.com/techysy/9router-fnos) · [MetaCubeXD](https://github.com/techysy/metacubexd-fnos) · [Strava Panel](https://github.com/techysy/strava-panel-fnos) | 更多 fnOS 应用 |
 
-## 🔮 Future / 迭代计划
+## 🔮 迭代计划
 
 等待上游 [nesquena/hermes-webui](https://github.com/nesquena/hermes-webui) 发布新版本后重新打包：
 
-- 跟进上游版本更新（新功能、Bug 修复）
-- WebUI 连接切换功能迭代（本地/远程 Gateway）
+- 跟进上游版本更新
+- WebUI 连接切换功能迭代
 - 新增聊天后端适配
-
-> 📖 上游项目：[nesquena/hermes-webui](https://github.com/nesquena/hermes-webui) · [NousResearch/hermes-agent](https://github.com/NousResearch/hermes-agent)
 
 ## License
 
