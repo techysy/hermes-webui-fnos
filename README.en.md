@@ -6,7 +6,7 @@ A fnOS package for the Hermes Agent web management interface.
 [![Downloads](https://img.shields.io/github/downloads/techysy/hermes-webui-fnos/total?label=Downloads&color=green)](https://github.com/techysy/hermes-webui-fnos/releases)
 [![License](https://img.shields.io/badge/license-MIT-blue.svg)](LICENSE)
 [![fnOS](https://img.shields.io/badge/fnOS-1.0+-green.svg)](https://www.fnnas.com)
-[![Upstream v0.52.106](https://img.shields.io/badge/Upstream-v0.52.106-purple.svg)](https://github.com/nesquena/hermes-webui)
+[![Hermes WebUI](https://img.shields.io/github/v/release/nesquena/hermes-webui?label=Hermes%20WebUI&color=purple)](https://github.com/nesquena/hermes-webui)
 
 > One-click deployment of [Hermes WebUI](https://github.com/nesquena/hermes-webui) on fnOS.
 
